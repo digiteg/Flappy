@@ -1,11 +1,11 @@
 import pgzrun
 import random
-
+from settings import *
 from gamemanager import GameManager, GameState
+from flappystates import *
 
-TITLE = 'Flappy Bird'
-WIDTH = 400
-HEIGHT = 708
+
+
 
 # These constants control the difficulty of the game
 GAP = 130
@@ -81,7 +81,7 @@ class PlayState(GameState):
 
 
 
-    def draw(self):
+    def draw(self,surf):
         screen.blit('background', (0, 0))
         self.pipe_top.draw()
         self.pipe_bottom.draw()
@@ -114,53 +114,6 @@ class PlayState(GameState):
             self.bird.vy = -FLAP_STRENGTH
 
 
-class MainMenuState(GameState):
-
-    def __init__(self, game):
-        super().__init__(game)
-        self.scroll_pos = -1
-
-    def draw(self):
-
-        screen.blit('startscreen', (0, 0))
-
-        screen.draw.text(
-            "PRESS A KEY TO START",
-            color='white',
-            midtop=(WIDTH // 2, HEIGHT // 2 + self.scroll_pos),
-            fontsize=40,
-            shadow=(1, 1)
-        )
-
-    def update(self):
-        self.scroll_pos *= -1
-
-    def on_key_down(self):
-        self.next()
-
-
-class GameOverState(GameState):
-
-    def __init__(self, game):
-        super().__init__(game)
-        self.scroll_pos = -1
-
-    def draw(self):
-        screen.blit("gameover", (0, 0))
-
-        screen.draw.text(
-            "PRESS ANY KEY TO CONTINUE",
-            color='white',
-            midtop=(WIDTH // 2, HEIGHT - 140 + self.scroll_pos),
-            fontsize=35,
-            shadow=(1, 1)
-        )
-
-    def update(self):
-        self.scroll_pos *= -1
-
-    def on_key_down(self):
-        self.next()
 
 
 def update():
@@ -172,7 +125,7 @@ def on_key_down():
 
 
 def draw():
-    game.draw()
+    game.draw(screen)
 
 
 game = GameManager()
