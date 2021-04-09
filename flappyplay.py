@@ -1,10 +1,7 @@
-import pgzrun
-import random
+from pgzero.actor import Actor
 from settings import *
-from gamemanager import GameManager, GameState
-from flappystates import *
-
-
+from gamemanager import GameState
+import random
 
 
 # These constants control the difficulty of the game
@@ -16,6 +13,7 @@ SPEED = 3
 HIGH_SCORE = 0
 
 
+
 class PlayState(GameState):
 
     bird = Actor('bird1', (75, 200))
@@ -25,7 +23,7 @@ class PlayState(GameState):
 
     def __init__(self, game):
         super().__init__(game)
-      
+
         self.reset_bird()
         self.reset_pipes()  # Set initial pipe positions.
 
@@ -64,7 +62,7 @@ class PlayState(GameState):
             else:
                 self.bird.image = 'bird1'
 
-        if self.bird.colliderect(self.pipe_top) or self.bird.colliderect(self.pipe_bottom) or (self.bird.y > HEIGHT -20):
+        if self.bird.colliderect(self.pipe_top) or self.bird.colliderect(self.pipe_bottom) or (self.bird.y > HEIGHT - 20):
             self.bird.dead = True
             self.bird.image = 'birddead'
 
@@ -75,26 +73,24 @@ class PlayState(GameState):
             self.bird.vy = 0
             self.reset_pipes()
 
-    def onEnter(self,prevstate):
+    def onEnter(self, prevstate):
         self.reset_bird()
         self.reset_pipes()  # Set initial pipe positions.
 
-
-
-    def draw(self,surf):
-        screen.blit('background', (0, 0))
+    def draw(self, surf):
+        surf.blit('background', (0, 0))
         self.pipe_top.draw()
         self.pipe_bottom.draw()
         self.bird.draw()
 
-        screen.draw.text(
+        surf.draw.text(
             str(self.bird.score),
             color='white',
             midtop=(WIDTH // 2, 10),
             fontsize=70,
             shadow=(1, 1)
         )
-        screen.draw.text(
+        surf.draw.text(
             "Best: {}".format(HIGH_SCORE),
             color=(200, 170, 0),
             midbottom=(WIDTH // 2, HEIGHT - 10),
@@ -106,38 +102,9 @@ class PlayState(GameState):
         self.update_pipes()
         self.update_bird()
 
-        if self.bird.dead  and (self.bird.y > HEIGHT -20):
+        if self.bird.dead and (self.bird.y > HEIGHT - 20):
             self.next()
 
     def on_key_down(self):
         if not self.bird.dead:
             self.bird.vy = -FLAP_STRENGTH
-
-
-
-
-def update():
-    game.update()
-
-
-def on_key_down():
-    game.on_key_down()
-
-
-def draw():
-    game.draw(screen)
-
-
-game = GameManager()
-state1 = MainMenuState(game)
-state2 = PlayState(game)
-state3 = GameOverState(game)
-
-state1.nextstate = state2
-state2.nextstate = state3
-state3.nextstate = state1
-
-game.play_music("theme")
-game.play_sound("eagle")
-game.run(state1)
-pgzrun.go()
