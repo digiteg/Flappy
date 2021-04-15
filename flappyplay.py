@@ -1,87 +1,118 @@
 from pgzero.actor import Actor
 from settings import *
 from gamemanager import GameState
+from animatedactor import AnimatedActor
 import random
 
 
 # These constants control the difficulty of the game
-GAP = 130
+
+
 GRAVITY = 0.3
 FLAP_STRENGTH = 6.5
+GAP = 130
 SPEED = 3
 
 HIGH_SCORE = 0
 
+class Bird(AnimatedActor):
+    
+    def __init__(self, game):
+        super().__init__("bird",dimension=(40,30),pingpong=True,duration=100)
+        self.reset()
+
+    def reset(self):
+        self.dead = False
+        self.score = 0
+        self.vy = 0
+        self.y = 200
+        self.set_move_state()
+
+    def set_move_state(self):
+        self.set_sequence(0,2)
+        self.pingpong= True
+
+    def set_dead_state(self):
+        self.dead = True
+        self.pingpong= False
+        self.current_frame=3
+
+    def move(self):
+        if not self.dead:
+            self.vy = -FLAP_STRENGTH
+
+    def update(self):
+        uy = self.vy
+        self.vy += GRAVITY
+        self.y += (uy + self.vy) / 2
+        self.x = 75
+
+    def checkcollision(self, sprite):
+        return self.colliderect(sprite)
 
 
-class PlayState(GameState):
+"""
+        if self.colliderect(self.pipe_top) or self.bird.colliderect(self.pipe_bottom) or (self.bird.y > HEIGHT - 20):
+            self.dead = True
+            self.image = 'birddead'
 
-    bird = Actor('bird1', (75, 200))
+        if not 0 < self.y < 720:
+            self.y = 200
+            self.dead = False
+            self.score = 0
+            self.vy = 0
+            self.reset_pipes()
+"""
 
+class Pipes:
     pipe_top = Actor('top', anchor=('left', 'bottom'))
     pipe_bottom = Actor('bottom', anchor=('left', 'top'))
 
-    def __init__(self, game):
-        super().__init__(game)
-
-        self.reset_bird()
-        self.reset_pipes()  # Set initial pipe positions.
-
-    def update_pipes(self):
-        global HIGH_SCORE
-        self.pipe_top.left -= SPEED
-        self.pipe_bottom.left -= SPEED
-        if self.pipe_top.right < 0:
-            self.reset_pipes()
-            if not self.bird.dead:
-                self.bird.score += 1
-                if self.bird.score > HIGH_SCORE:
-                    HIGH_SCORE = self.bird.score
-
-    def reset_pipes(self):
+    def reset(self):
         pipe_gap_y = random.randint(200, HEIGHT - 200)
         self.pipe_top.pos = (WIDTH, pipe_gap_y - GAP // 2)
         self.pipe_bottom.pos = (WIDTH, pipe_gap_y + GAP // 2)
 
-    def reset_bird(self):
-        self.bird.dead = False
-        self.bird.score = 0
-        self.bird.vy = 0
-        self.bird.y = 0
-        self.bird.image = 'bird1'
+    
+    def checkcollision(self, sprite):
+        return sprite.colliderect(self.pipe_top) or sprite.colliderect(self.pipe_bottom)
 
-    def update_bird(self):
-        uy = self.bird.vy
-        self.bird.vy += GRAVITY
-        self.bird.y += (uy + self.bird.vy) / 2
-        self.bird.x = 75
+    def draw(self, surf):
+        self.pipe_top.draw()
+        self.pipe_bottom.draw()
 
-        if not self.bird.dead:
-            if self.bird.vy < -3:
-                self.bird.image = 'bird2'
-            else:
-                self.bird.image = 'bird1'
+    def update(self):
+        global HIGH_SCORE
+        self.pipe_top.left -= SPEED
+        self.pipe_bottom.left -= SPEED
+        if self.pipe_top.right < 0:
+            self.reset()
 
-        if self.bird.colliderect(self.pipe_top) or self.bird.colliderect(self.pipe_bottom) or (self.bird.y > HEIGHT - 20):
-            self.bird.dead = True
-            self.bird.image = 'birddead'
+           # if not self.bird.dead:
+           #     self.bird.score += 1
+           #     if self.bird.score > HIGH_SCORE:
+           #         HIGH_SCORE = self.bird.score
 
-        if not 0 < self.bird.y < 720:
-            self.bird.y = 200
-            self.bird.dead = False
-            self.bird.score = 0
-            self.bird.vy = 0
-            self.reset_pipes()
 
+class PlayState(GameState):
+
+    def __init__(self, game):
+        super().__init__(game)
+        self.name = "Play"
+
+        self.bird = Bird(game)
+        self.pipes = Pipes()
+
+        self.pipes.reset()  # Set initial pipe positions.
+  
     def onEnter(self, prevstate):
-        self.reset_bird()
-        self.reset_pipes()  # Set initial pipe positions.
+        self.bird.reset()
+        self.pipes.reset()  # Set initial pipe positions.
 
     def draw(self, surf):
         surf.blit('background', (0, 0))
-        self.pipe_top.draw()
-        self.pipe_bottom.draw()
-        self.bird.draw()
+        self.bird.draw(surf)
+        self.pipes.draw(surf)
 
         surf.draw.text(
             str(self.bird.score),
@@ -99,12 +130,15 @@ class PlayState(GameState):
         )
 
     def update(self):
-        self.update_pipes()
-        self.update_bird()
+        self.pipes.update()
+        self.bird.update()
+
+        if self.pipes.checkcollision(self.bird):
+            self.bird.set_dead_state()
 
         if self.bird.dead and (self.bird.y > HEIGHT - 20):
             self.next()
 
     def on_key_down(self):
         if not self.bird.dead:
-            self.bird.vy = -FLAP_STRENGTH
+            self.bird.move()

@@ -6,6 +6,7 @@ class MainMenuState(GameState):
     def __init__(self, game):
         super().__init__(game)
         self.scroll_pos = -1
+        self.name = "Main menu"
 
     def draw(self,surf):
 
@@ -31,6 +32,7 @@ class GameOverState(GameState):
     def __init__(self, game):
         super().__init__(game)
         self.scroll_pos = -1
+        self.name = "Game over"
 
     def draw(self, surf):
         surf.blit("gameover", (0, 0))

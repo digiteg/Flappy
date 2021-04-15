@@ -4,9 +4,10 @@ class GameState:
     # Initialise the Game state class. Each sub-type must call this method. Takes one parameter, which
     # is the game instance.
 
-    def __init__(self, game_fsm_manager, state=None):
+    def __init__(self, game_fsm_manager, nxtstate=None):
         self.game = game_fsm_manager
-        self.nextstate = state
+        self.nextstate = nxtstate
+        self.name = "GameState"
 
     # Called by the game when entering the state for the first time.
 
@@ -35,6 +36,9 @@ class GameState:
 
     def next(self):
         self.game.changeState(self.nextstate)
+
+    def __str__(self):
+        return self.name
 
 
 class GameFSM:
