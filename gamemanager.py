@@ -27,8 +27,8 @@ class GameState:
 
     # Called by the game allowing the state to draw itself. The surface that is passed is the
     # current drawing surface.
-    def draw(self, surf):
-        pass
+    #def draw(self, surf):
+    #    pass
 
     # Called by the game on key down
     def on_key_down(self):
@@ -77,6 +77,6 @@ class GameFSM:
     # Called by the game allowing the state to draw itself. The surface that is passed is the
     # current drawing surface.
 
-    def draw(self, surf):
-        pass
+    #def draw(self, surf):
+    #    pass
 

@@ -3,12 +3,13 @@ from time import time
 
 
 class AnimatedActor(Actor):
-    def __init__(self, *args, dimension, pingpong=False, duration=100,  **kwargs):
+    def __init__(self, *args, dimension, layer=None, pingpong=False, duration=100,  **kwargs):
         super().__init__(*args, **kwargs)
         self.duration = duration
         self._stopped = False
         self._frames = []
         self.pingpong = pingpong
+        self.layer = layer
 
         self.set_image(self.image, dimension)
 
@@ -74,7 +75,6 @@ class AnimatedActor(Actor):
         self.last_frame_update = time() * 1000
         self._next_frame_dx = 1
 
-
     def _update_frame(self):
 
         if self._stopped or self.is_seqence_end():
@@ -92,7 +92,8 @@ class AnimatedActor(Actor):
             if self._current_frame > self.end_anim_index:
                 self._current_frame = self.end_anim_index
 
-    def draw(self, surf):
+    def draw(self):
         self._update_frame()
+        surf = self.layer.screen
         # print(self._current_frame)
         surf.blit(self._frames[self._current_frame], self.topleft)

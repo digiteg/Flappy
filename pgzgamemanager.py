@@ -2,7 +2,7 @@ from gamemanager import GameFSM
 from random import randint
 
 
-class GameFSMWSounds(GameFSM):
+class GameSounds:
 
     def __init__(self, _music, _sounds, _tone):
         super().__init__()
@@ -54,28 +54,25 @@ class GameFSMWSounds(GameFSM):
             pass
 
 
-class GameManager(GameFSMWSounds):
+class GameManager(GameSounds, GameFSM):
 
-    def __init__(self, _clock, _images, _keyboard,  _music, _sounds, _tone):
-        super().__init__(_music, _sounds, _tone)
+    def __init__(self, _scene, _clock, _images, _keyboard,  _music, _sounds, _tone):
+        GameSounds.__init__(self,_music, _sounds, _tone)
         self.clock = _clock
         self.images = _images
         self.keyboard = _keyboard
-        self.screen = None
-
-    def init_screen(self, _screen, _width, _heigth):
-        self.screen = _screen
-
+        self.scene = _scene
+    
     def update(self):
         if (self.currentState != None):
             self.currentState.update()
 
-    def draw(self, surf=None):
-        if (self.currentState != None):
-            if (surf is None):
-                self.currentState.draw(self.screen)
-            else:
-                self.currentState.draw(surf)
+    # def draw(self, surf=None):
+    #    if (self.currentState != None):
+    #        if (surf is None):
+    #            self.currentState.draw(self.screen)
+    #        else:
+    #            self.currentState.draw(surf)
 
    # Called by the game on key down
     def on_key_down(self):

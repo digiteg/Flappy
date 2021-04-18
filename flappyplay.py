@@ -2,6 +2,8 @@ from pgzero.actor import Actor
 from settings import *
 from gamemanager import GameState
 from animatedactor import AnimatedActor
+from text import Label
+from sprite import Sprite
 import random
 
 
@@ -77,7 +79,7 @@ class Pipes:
     def checkcollision(self, sprite):
         return sprite.colliderect(self.pipe_top) or sprite.colliderect(self.pipe_bottom)
 
-    def draw(self, surf):
+    def draw(self):
         self.pipe_top.draw()
         self.pipe_bottom.draw()
 
@@ -103,31 +105,26 @@ class PlayState(GameState):
         self.bird = Bird(game)
         self.pipes = Pipes()
 
+        self.birdsc = Label (  str(self.bird.score), color='white',pos = (WIDTH // 2, 10),fontsize=70)
+        self.bestsc = Label (  "Best: {}".format(HIGH_SCORE), color='white',pos = (WIDTH // 2, HEIGHT - 10),fontsize=30)
+        self.background = Sprite ('background', (0, 0))
+
         self.pipes.reset()  # Set initial pipe positions.
   
     def onEnter(self, prevstate):
         self.bird.reset()
         self.pipes.reset()  # Set initial pipe positions.
+        self.game.scene.layers[0].add_object(self.background)
+        
+        self.game.scene.layers[1].add_object(self.pipes)
+        self.game.scene.layers[1].add_object(self.bird)
 
-    def draw(self, surf):
-        surf.blit('background', (0, 0))
-        self.bird.draw(surf)
-        self.pipes.draw(surf)
+        self.game.scene.layers[2].add_object(self.birdsc)
+        self.game.scene.layers[2].add_object(self.bestsc)
 
-        surf.draw.text(
-            str(self.bird.score),
-            color='white',
-            midtop=(WIDTH // 2, 10),
-            fontsize=70,
-            shadow=(1, 1)
-        )
-        surf.draw.text(
-            "Best: {}".format(HIGH_SCORE),
-            color=(200, 170, 0),
-            midbottom=(WIDTH // 2, HEIGHT - 10),
-            fontsize=30,
-            shadow=(1, 1)
-        )
+    def onExit(self):
+        self.game.scene.layers.clear()
+
 
     def update(self):
         self.pipes.update()
@@ -138,6 +135,8 @@ class PlayState(GameState):
 
         if self.bird.dead and (self.bird.y > HEIGHT - 20):
             self.next()
+
+        self.birdsc.text = str(self.bird.score)
 
     def on_key_down(self):
         if not self.bird.dead:
