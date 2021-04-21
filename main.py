@@ -2,12 +2,9 @@ import pgzrun
 from settings import *
 
 from pgzgamemanager import GameManager
-from flappystates import MainMenuState, GameOverState
-from flappyplay import PlayState
+from flappystates import MainMenuState, GameOverState, PlayState
 
-from animatedactor import AnimatedActor
 
-from text import Label
 from scene import Scene
 
 
@@ -24,7 +21,8 @@ def draw():
     scene.draw()
 #    bird.draw(screen)
 
-scene = Scene()
+
+scene = Scene(WIDTH, HEIGHT, TITLE)
 game = GameManager(scene, clock,  images, keyboard, music, sounds, tone)
 state1 = MainMenuState(game)
 state2 = PlayState(game)
