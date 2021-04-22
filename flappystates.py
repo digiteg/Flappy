@@ -1,9 +1,9 @@
 
-from gamemanager import GameState
-from flappyplay import Base, Bird, Pipes, Context
-from text import Label
-from sprite import Sprite
+from lib.gamemanager import GameState
+from lib.text import Label
+from lib.sprite import Sprite
 
+from flappyplay import Base, Bird, Pipes, Context
 
 class MainMenuState(GameState):
 

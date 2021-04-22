@@ -1,7 +1,7 @@
 from pgzero.actor import Actor
-from animatedactor import AnimatedActor
-from text import Label
-from sprite import Sprite
+from lib.animatedactor import AnimatedActor
+from lib.text import Label
+from lib.sprite import Sprite
 import random
 
 
@@ -37,6 +37,7 @@ class Bird(AnimatedActor):
     def __init__(self, game):
         super().__init__("bird", dimension=(40, 30), pingpong=True, duration=100)
         self.reset()
+        self.game = game
 
     def reset(self):
         self.dead = False
@@ -50,6 +51,10 @@ class Bird(AnimatedActor):
         self.pingpong = True
 
     def set_dead_state(self):
+        
+        if not self.dead: 
+            self.game.play_sound("eagle")
+            
         self.dead = True
         self.pingpong = False
         self.current_frame = 3
