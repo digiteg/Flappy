@@ -19,9 +19,11 @@ class MainMenuState(GameState):
     def onEnter(self, prevstate):
         self.game.scene.layers[0].add_object(self.startscreen)
         self.game.scene.layers[0].add_object(self.label)
+        self.game.events.on_key_down += self.on_key_down
 
     def onExit(self):
         self.game.scene.layers.clear()
+        self.game.events.on_key_down -= self.on_key_down
 
     def update(self):
         self.scroll_pos *= -1
@@ -44,9 +46,12 @@ class GameOverState(GameState):
     def onEnter(self, prevstate):
         self.game.scene.layers[0].add_object(self.gameoverscreen)
         self.game.scene.layers[0].add_object(self.label)
+        self.game.events.on_key_down += self.on_key_down
+
 
     def onExit(self):
         self.game.scene.layers.clear()
+        self.game.events.on_key_down -= self.on_key_down
 
     def update(self):
         self.scroll_pos *= -1
@@ -90,8 +95,11 @@ class PlayState(GameState):
         self.game.scene.layers[3].add_object(self.birdsc)
         self.game.scene.layers[3].add_object(self.bestsc)
 
+        self.game.events.on_key_down += self.on_key_down
+
     def onExit(self):
         self.game.scene.layers.clear()
+        self.game.events.on_key_down -= self.on_key_down
 
     def update(self):
         self.pipes.update(self.context)

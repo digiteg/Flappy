@@ -74,7 +74,3 @@ class GameManager(GameSounds, GameFSM):
     #        else:
     #            self.currentState.draw(surf)
 
-   # Called by the game on key down
-    def on_key_down(self):
-        if (self.currentState != None):
-            self.currentState.on_key_down()

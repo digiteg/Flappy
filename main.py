@@ -15,7 +15,7 @@ def on_set_settings(var_name, value):
     globals()[var_name] = value
 
 def on_key_down():
-    game.on_key_down()
+    game.events.on_key_down()
 
 def draw():
     scene.screen = screen

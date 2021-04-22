@@ -1,3 +1,4 @@
+from .events import Events
 
 class GameState:
 
@@ -25,15 +26,6 @@ class GameState:
     def update(self):
         pass
 
-    # Called by the game allowing the state to draw itself. The surface that is passed is the
-    # current drawing surface.
-    #def draw(self, surf):
-    #    pass
-
-    # Called by the game on key down
-    def on_key_down(self):
-        pass
-
     def next(self):
         self.game.changeState(self.nextstate)
 
@@ -46,6 +38,7 @@ class GameFSM:
     # Initialise the FSM manager class.
     def __init__(self):
         self.currentState = None
+        self.events = Events()
 
     # Change the current state. If the newState is 'None' then the game will terminate.
     def changeState(self, newState):
