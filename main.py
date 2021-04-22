@@ -11,20 +11,15 @@ from flappystates import MainMenuState, GameOverState, PlayState
 def update():
     game.update()
 
-
 def on_set_settings(var_name, value):
     globals()[var_name] = value
-
 
 def on_key_down():
     game.on_key_down()
 
-
 def draw():
     scene.screen = screen
     scene.draw()
-
-#    bird.draw(screen)
 
 
 scene = Scene(WIDTH, HEIGHT, TITLE, on_set_settings_fun=on_set_settings)
