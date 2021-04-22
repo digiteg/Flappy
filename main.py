@@ -1,8 +1,8 @@
 import pgzrun
 from settings import *
 
-from lib.pgzgamemanager import GameManager
-from lib.scene import Scene
+from gamelib.pgzgamemanager import GameManager
+from gamelib.scene import Scene
 
 from flappystates import MainMenuState, GameOverState, PlayState
 

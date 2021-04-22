@@ -1,7 +1,7 @@
 from pgzero.actor import Actor
-from lib.animatedactor import AnimatedActor
-from lib.text import Label
-from lib.sprite import Sprite
+from gamelib.animatedactor import AnimatedActor
+from gamelib.text import Label
+from gamelib.sprite import Sprite
 import random
 
 

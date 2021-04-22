@@ -1,7 +1,7 @@
 
-from lib.gamemanager import GameState
-from lib.text import Label
-from lib.sprite import Sprite
+from gamelib.gamemanager import GameState
+from gamelib.text import Label
+from gamelib.sprite import Sprite
 
 from flappyplay import Base, Bird, Pipes, Context
 
